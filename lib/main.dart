@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Doublechat with hypertext'),
     );
   }
 }
@@ -40,14 +41,65 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-
+  
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _text = "";
+  List<String> _keywords = <String>["меч", "кинжал", "сковородка", "двуручный меч", "двуручный молот", "посох", "боевой посох"];
+  final List<String> keywordsInThisState = <String>[];
+  BuildContext context;
+  
+  void _changeTextField(String text) {
+    setState(() {
+      keywordsInThisState.clear();
+      if(text == ''){
+        return;
+      }
+      List<String> words = text.split(' ');
+      for (String keyword in _keywords){
+        var spaces = keyword.split(' ').length - 1;
+        if(spaces + 1 < words.length){
+          String lastWords = words[words.length - spaces - 1];
+          for (var i = words.length - spaces; i < words.length; i++){
+            lastWords += ' ' + words[i];
+          }
+          if (keyword.contains(lastWords)){
+            keyword = keyword.replaceFirst(lastWords, lastWords.toUpperCase());
+            keywordsInThisState.add(keyword);
+          }
+        } else {
+          var lastWords = text;
+          if (keyword.contains(lastWords)){
+            keyword = keyword.replaceFirst(lastWords, lastWords.toUpperCase());
+            keywordsInThisState.add(keyword);
+          }
+        }
+      }
 
+
+      /*
+      List<String> words = text.split(' ').reversed.toList();
+      for (var word in _keywords) {
+        if(!word.contains(' ')) {
+          for(var i = 0; i < words[0].length; i++){
+            if (word[i] == words[0][i]){
+              if (i == words[0].length - 1)
+                keywordsInThisState.add(word);
+            }
+            else break;
+          }
+        } else {
+          List<String> wordsInKeyword = word.split(' ').reversed.toList();
+          
+          
+        }
+      }*/
+    });
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -56,11 +108,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+      keywordsInThisState.add(_counter.toString());
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -93,6 +146,18 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text("Подсказки"),
+            Container(
+              height: 100,
+              child : ListView.builder(
+                padding: const EdgeInsets.all(20),
+                itemCount: keywordsInThisState.length,
+                itemBuilder: (BuildContext children, int index) {
+                  //Настроим выделения
+                  return Text('${keywordsInThisState[index]}');
+                },
+              ),
+            ),
             Text(
               'You have pushed the button this many times:',
             ),
@@ -100,6 +165,20 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            TextFormField(
+              decoration: InputDecoration(
+                border : OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5))
+                  ),
+                hintText: "Сообщение",
+                
+              ),
+              onChanged: (text) {
+                _changeTextField(text);
+              },
+            ),
+            
+            
           ],
         ),
       ),
