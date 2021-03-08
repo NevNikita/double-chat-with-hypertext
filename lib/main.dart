@@ -62,10 +62,14 @@ class _MyHomePageState extends State<MyHomePage> {
       List<String> words = text.split(' ');
       for (String keyword in _keywords){
         var spaces = keyword.split(' ').length - 1;
-        if(spaces + 1 < words.length){
-          String lastWords = words[words.length - spaces - 1];
-          for (var i = words.length - spaces; i < words.length; i++){
-            lastWords += ' ' + words[i];
+        if(spaces + 1 <= words.length){
+          String lastWords = words.last;
+          for (var i = words.length - 2; i >= 0; i--){
+            if (keyword.contains(lastWords)){
+              keyword = keyword.replaceFirst(lastWords, lastWords.toUpperCase());
+              keywordsInThisState.add(keyword);
+            }
+            lastWords += words[i] + ' ' + lastWords;
           }
           if (keyword.contains(lastWords)){
             keyword = keyword.replaceFirst(lastWords, lastWords.toUpperCase());
@@ -79,25 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-
-
-      /*
-      List<String> words = text.split(' ').reversed.toList();
-      for (var word in _keywords) {
-        if(!word.contains(' ')) {
-          for(var i = 0; i < words[0].length; i++){
-            if (word[i] == words[0][i]){
-              if (i == words[0].length - 1)
-                keywordsInThisState.add(word);
-            }
-            else break;
-          }
-        } else {
-          List<String> wordsInKeyword = word.split(' ').reversed.toList();
-          
-          
-        }
-      }*/
     });
   }
   void _incrementCounter() {
