@@ -49,13 +49,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String _text = "";
-  List<String> _keywords = <String>["меч", "кинжал", "сковородка", "двуручный меч", "двуручный молот", "посох", "боевой посох"];
+  List<String> _keywords = <String>["меч", "кинжал", "сковородка", "двуручный меч", "двуручный молот", "посох", "боевой посох", "булава молаг бала"];
   final List<String> keywordsInThisState = <String>[];
   BuildContext context;
   
   void _changeTextField(String text) {
     setState(() {
       keywordsInThisState.clear();
+      text = text.trim();
       if(text == ''){
         return;
       }
@@ -150,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            TextFormField(
+            TextField(
               decoration: InputDecoration(
                 border : OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5))
@@ -158,9 +159,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 hintText: "Сообщение",
                 
               ),
+              keyboardType: TextInputType.multiline,
               onChanged: (text) {
                 _changeTextField(text);
               },
+              maxLength: 512,
+              maxLengthEnforcement: MaxLengthEnforcement.enforced,
+              minLines: 1,
+              maxLines: 3,
+              
             ),
             
             
