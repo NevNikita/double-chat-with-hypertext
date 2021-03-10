@@ -15,6 +15,19 @@ FocusNode myFocusNode = new FocusNode();
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
+  void sendMessage() {
+    setState(() {
+      if(_textFieldController.text == ''){
+        return;
+      }
+      messages.add(ChatMessage(messageContent: _textFieldController.text, messageType: "sender"));
+      _textFieldController.clear();
+      myFocusNode.requestFocus();
+      _scrollController.animateTo(0.0,
+          curve: Curves.easeOut, duration: const Duration(milliseconds: 300));
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -78,126 +91,114 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       ),
 
       // примерно здесь должно быть разделение на несколько чатов
-      body: Stack(
-        children: <Widget>[
-          ListView.builder(
-            controller: _scrollController,
-            reverse: true,
-            itemCount: messages.length,
-            shrinkWrap: true,
-            padding: EdgeInsets.only(top: 10, bottom: 50),
-            physics: BouncingScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Container(
-                padding:
-                    EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-                child: Align(
-                  alignment:
-                      (messages[messages.length - 1 - index].messageType ==
-                              "receiver"
-                          ? Alignment.topLeft
-                          : Alignment.topRight),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color:
-                          (messages[messages.length - 1 - index].messageType ==
-                                  "receiver"
-                              ? Colors.grey.shade200
-                              : Colors.blue[200]),
-                    ),
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      messages[messages.length - 1 - index].messageContent,
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-              height: 60,
-              width: double.infinity,
-              color: Colors.white,
-              child: Row(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {},
+      body: new GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Stack(
+          children: <Widget>[
+            ListView.builder(
+              controller: _scrollController,
+              reverse: true,
+              itemCount: messages.length,
+              shrinkWrap: false,
+              padding: EdgeInsets.only(top: 10, bottom: 60),
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Container(
+                  padding:
+                      EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                  child: Align(
+                    alignment:
+                        (messages[messages.length - 1 - index].messageType ==
+                                "receiver"
+                            ? Alignment.topLeft
+                            : Alignment.topRight),
                     child: Container(
-                      height: 30,
-                      width: 30,
                       decoration: BoxDecoration(
-                        color: Colors.lightBlue,
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(20),
+                        color: (messages[messages.length - 1 - index]
+                                    .messageType ==
+                                "receiver"
+                            ? Colors.grey.shade200
+                            : Colors.blue[200]),
                       ),
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        messages[messages.length - 1 - index].messageContent,
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                height: 60,
+                width: double.infinity,
+                color: Colors.white,
+                child: Row(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.lightBlue,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _textFieldController,
+                        focusNode: myFocusNode,
+                        autofocus: true,
+                        onSubmitted: (value) {
+                          sendMessage();
+                        },
+                        //onChanged: (text) {
+                        //  chatInputField = text;
+                        //},
+                        decoration: InputDecoration(
+                            hintText: "Пиши сообщение",
+                            hintStyle: TextStyle(color: Colors.black54),
+                            border: InputBorder.none),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    FloatingActionButton(
+                      onPressed: () {
+                        sendMessage();
+                      },
                       child: Icon(
-                        Icons.add,
+                        Icons.send,
                         color: Colors.white,
-                        size: 20,
+                        size: 18,
                       ),
+                      backgroundColor: Colors.blue,
+                      elevation: 0,
                     ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _textFieldController,
-                      focusNode: myFocusNode,
-                      autofocus: true,
-                      onSubmitted: (value) {
-                        setState(() {
-                          messages.add(ChatMessage(
-                              messageContent: value, messageType: "sender"));
-                          _textFieldController.clear();
-                          myFocusNode.requestFocus();
-                          _scrollController.animateTo(0.0,
-                              curve: Curves.easeOut,
-                              duration: const Duration(milliseconds: 300));
-                        });
-                      },
-                      onChanged: (text) {
-                        chatInputField = text;
-                      },
-                      decoration: InputDecoration(
-                          hintText: "Пиши сообщение",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          border: InputBorder.none),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        messages.add(ChatMessage(
-                            messageContent: chatInputField,
-                            messageType: "sender"));
-                        _textFieldController.clear();
-                        myFocusNode.requestFocus();
-                        _scrollController.animateTo(0.0,
-                            curve: Curves.easeOut,
-                            duration: const Duration(milliseconds: 300));
-                      });
-                    },
-                    child: Icon(
-                      Icons.send,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                    backgroundColor: Colors.blue,
-                    elevation: 0,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
