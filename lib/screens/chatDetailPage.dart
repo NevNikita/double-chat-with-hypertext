@@ -6,6 +6,8 @@ class ChatDetailPage extends StatefulWidget {
   _ChatDetailPageState createState() => _ChatDetailPageState();
 }
 
+ScrollController _scrollController = new ScrollController();
+
 class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
   Widget build(BuildContext context) {
@@ -74,28 +76,34 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       body: Stack(
         children: <Widget>[
           ListView.builder(
+            controller: _scrollController,
+            reverse: true,
             itemCount: messages.length,
             shrinkWrap: true,
-            padding: EdgeInsets.only(top: 10, bottom: 10),
+            padding: EdgeInsets.only(top: 10, bottom: 50),
             physics: BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               return Container(
                 padding:
                     EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
                 child: Align(
-                  alignment: (messages[index].messageType == "receiver"
-                      ? Alignment.topLeft
-                      : Alignment.topRight),
+                  alignment:
+                      (messages[messages.length - 1 - index].messageType ==
+                              "receiver"
+                          ? Alignment.topLeft
+                          : Alignment.topRight),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: (messages[index].messageType == "receiver"
-                          ? Colors.grey.shade200
-                          : Colors.blue[200]),
+                      color:
+                          (messages[messages.length - 1 - index].messageType ==
+                                  "receiver"
+                              ? Colors.grey.shade200
+                              : Colors.blue[200]),
                     ),
                     padding: EdgeInsets.all(16),
                     child: Text(
-                      messages[index].messageContent,
+                      messages[messages.length - 1 - index].messageContent,
                       style: TextStyle(fontSize: 15),
                     ),
                   ),
@@ -135,8 +143,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     child: TextField(
                       autofocus: false,
                       onSubmitted: (value) {
-                        messages.add(ChatMessage(
-                            messageContent: value, messageType: "sender"));
+                        setState(() {
+                          messages.add(ChatMessage(
+                              messageContent: value, messageType: "sender"));
+                          _scrollController.animateTo(0.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 300));
+                        });
                       },
                       onChanged: (text) {
                         chatInputField = text;
@@ -151,7 +164,16 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     width: 15,
                   ),
                   FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        messages.add(ChatMessage(
+                            messageContent: chatInputField,
+                            messageType: "sender"));
+                        _scrollController.animateTo(0.0,
+                            curve: Curves.easeOut,
+                            duration: const Duration(milliseconds: 300));
+                      });
+                    },
                     child: Icon(
                       Icons.send,
                       color: Colors.white,
