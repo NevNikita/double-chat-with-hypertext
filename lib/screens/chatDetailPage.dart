@@ -6,7 +6,12 @@ class ChatDetailPage extends StatefulWidget {
   _ChatDetailPageState createState() => _ChatDetailPageState();
 }
 
+// TODO: Перенести всю логику написания сообщения в отдельный класс (модел)
+
 ScrollController _scrollController = new ScrollController();
+TextEditingController _textFieldController = new TextEditingController();
+
+FocusNode myFocusNode = new FocusNode();
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
@@ -141,11 +146,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   ),
                   Expanded(
                     child: TextField(
-                      autofocus: false,
+                      controller: _textFieldController,
+                      focusNode: myFocusNode,
+                      autofocus: true,
                       onSubmitted: (value) {
                         setState(() {
                           messages.add(ChatMessage(
                               messageContent: value, messageType: "sender"));
+                          _textFieldController.clear();
+                          myFocusNode.requestFocus();
                           _scrollController.animateTo(0.0,
                               curve: Curves.easeOut,
                               duration: const Duration(milliseconds: 300));
@@ -169,6 +178,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         messages.add(ChatMessage(
                             messageContent: chatInputField,
                             messageType: "sender"));
+                        _textFieldController.clear();
+                        myFocusNode.requestFocus();
                         _scrollController.animateTo(0.0,
                             curve: Curves.easeOut,
                             duration: const Duration(milliseconds: 300));
