@@ -15,19 +15,6 @@ FocusNode myFocusNode = new FocusNode();
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
-  void sendMessage() {
-    setState(() {
-      if(_textFieldController.text == ''){
-        return;
-      }
-      messages.add(ChatMessage(messageContent: _textFieldController.text, messageType: "sender"));
-      _textFieldController.clear();
-      myFocusNode.requestFocus();
-      _scrollController.animateTo(0.0,
-          curve: Curves.easeOut, duration: const Duration(milliseconds: 300));
-    });
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +40,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 ),
                 CircleAvatar(
                   backgroundImage: NetworkImage(
-                      "<https://randomuser.me/api/portraits/men/5.jpg>"),
+                      "https://randomuser.me/api/portraits/men/5.jpg"),
                   maxRadius: 20,
                 ),
                 SizedBox(
@@ -201,5 +188,19 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         ),
       ),
     );
+  }
+
+  void sendMessage() {
+    setState(() {
+      if (_textFieldController.text == '') {
+        return;
+      }
+      messages.add(ChatMessage(
+          messageContent: _textFieldController.text, messageType: "sender"));
+      _textFieldController.clear();
+      myFocusNode.requestFocus();
+      _scrollController.animateTo(0.0,
+          curve: Curves.easeOut, duration: const Duration(milliseconds: 300));
+    });
   }
 }

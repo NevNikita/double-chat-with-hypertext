@@ -30,8 +30,8 @@ class _HomePageState extends State<HomePage> {
             title: Text("Чаты"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            title: Text("Предметы"),
+            icon: Icon(Icons.my_library_books),
+            title: Text("Библиотека"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_box),
