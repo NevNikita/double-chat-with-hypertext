@@ -1,4 +1,5 @@
 import 'package:double_chat_with_hypertext/models/authorisationModel.dart';
+// ignore: unused_import
 import 'package:double_chat_with_hypertext/screens/authorisationPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -20,21 +21,29 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  Timer searchOnStoppedTypingLogin;
+  Timer
+      searchOnStoppedTypingLogin; //таймер который идёт заново после того как юзер печатает
   _onChangeLoginHandler(value) {
-    const duration = Duration(seconds: 3);
+    const duration = Duration(
+        seconds:
+            3); //сколько ждать после того как пользователь прекратил писать
     if (searchOnStoppedTypingLogin != null) {
       setState(() => searchOnStoppedTypingLogin.cancel());
     }
-    setState(() => searchOnStoppedTypingLogin =
-        new Timer(duration, () => changeLogin(value)));
+    setState(() => searchOnStoppedTypingLogin = new Timer(
+        duration,
+        () => changeLogin(
+            value))); //когда проходит время, запускается проверка валидации
   }
 
   changeLogin(value) {
+    //проверка валидации
     setState(() {
       _loginValidation = nameValidation(value) ? true : false;
     });
   }
+
+  //НИЖЕ ЕЩЁ НЕСКОЛЬКО ТАКИХ ЖЕ ФУНКЦИЙ
 
   Timer searchOnStoppedTypingEmail;
   _onChangeEmailHandler(value) {
@@ -87,14 +96,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ? true
               : false;
     });
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _loginController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 
   @override
@@ -186,8 +187,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(20)),
                   child: TextButton(
-                    onPressed: () =>
-                        Future.delayed(Duration(seconds: 5), () => enter()),
+                    onPressed: () => enter(),
                     child: Text(
                       'Зарегистрироваться',
                       style: TextStyle(color: Colors.white, fontSize: 25),
@@ -200,17 +200,14 @@ class _RegisterPageState extends State<RegisterPage> {
         ));
   }
 
-  void enter() {
-    if (_loginValidation &&
-        _passwordValidation &&
-        _emailValidation &&
-        _passwordConfirmationValidation) {
-      setState(() {
-        registerUser(
-            email: _emailController.text,
-            name: _loginController.text,
-            password: _passwordController.text);
-      });
-    }
+//TODO если в полях ничего не писали то кнопка не работает и ошибки не показываются
+  enter() {
+    setState(() {
+      if ((_passwordController.text == _passwordConfirmationController.text) &&
+          registerUser(
+              email: _emailController.text,
+              name: _loginController.text,
+              password: _passwordController.text)) Navigator.pop(context);
+    });
   }
 }

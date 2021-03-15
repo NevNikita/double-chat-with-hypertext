@@ -1,6 +1,7 @@
 import 'package:double_chat_with_hypertext/screens/chatDetailPage.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ConversationList extends StatefulWidget {
   String name;
   String messageText;

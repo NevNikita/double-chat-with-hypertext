@@ -40,11 +40,17 @@ bool passwordValidation(String password) {
   return true;
 }
 
-void registerUser(
+bool registerUser(
     {@required String email,
     @required String name,
     @required String password}) {
-  users.add(User(email: email, name: name, password: password));
+  if (passwordValidation(password) &&
+      nameValidation(name) &&
+      (emailValidation(email) == "ok")) {
+    users.add(User(email: email, name: name, password: password));
+    return true;
+  } else
+    return false;
 }
 
 String loginUser(String login, String password) {

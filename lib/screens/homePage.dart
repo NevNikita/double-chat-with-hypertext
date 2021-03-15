@@ -27,15 +27,15 @@ class _HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.message),
-            title: Text("Чаты"),
+            label: "Чаты",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.my_library_books),
-            title: Text("Библиотека"),
+            label: "Библиотека",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_box),
-            title: Text("Профиль"),
+            label: "Профиль",
           ),
         ],
       ),
