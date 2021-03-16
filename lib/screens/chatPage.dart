@@ -12,7 +12,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -81,7 +81,7 @@ class _ChatPageState extends State<ChatPage> {
               itemCount: chatUsers.length,
               shrinkWrap: true,
               padding: EdgeInsets.only(top: 16),
-              physics: NeverScrollableScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return ConversationList(
                   name: chatUsers[index].name,

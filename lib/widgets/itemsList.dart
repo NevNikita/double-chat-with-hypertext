@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class ItemsList extends StatefulWidget {
+  int index;
   String code;
   String name;
   String description;
   ItemsList(
-      {@required this.code, @required this.name, @required this.description});
+      {@required this.index,
+      @required this.code,
+      @required this.name,
+      @required this.description});
   @override
   _ItemsListState createState() => _ItemsListState();
 }
@@ -18,7 +22,9 @@ class _ItemsListState extends State<ItemsList> {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ItemDetailPage();
+          return ItemDetailPage(
+            index: widget.index,
+          );
         }));
       },
       child: Container(
@@ -37,14 +43,14 @@ class _ItemsListState extends State<ItemsList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            widget.code,
+                            widget.code == null ? "" : widget.code,
                             style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(
                             height: 6,
                           ),
                           Text(
-                            widget.name,
+                            widget.name == null ? "" : widget.name,
                             style: TextStyle(fontSize: 13),
                           ),
                         ],
@@ -55,7 +61,7 @@ class _ItemsListState extends State<ItemsList> {
               ),
             ),
             Text(
-              widget.description,
+              widget.description == null ? "" : widget.description,
               style: TextStyle(fontSize: 12),
             ),
           ],

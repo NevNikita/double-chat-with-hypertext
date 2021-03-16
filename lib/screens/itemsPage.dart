@@ -2,6 +2,8 @@ import 'package:double_chat_with_hypertext/models/libraryItems.dart';
 import 'package:double_chat_with_hypertext/widgets/itemsList.dart';
 import 'package:flutter/material.dart';
 
+import 'itemDetailPage.dart';
+
 class ItemPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ItemPageState();
@@ -46,11 +48,15 @@ class _ItemPageState extends State<ItemPage> {
                           width: 2,
                         ),
                         TextButton(
-                          //TODO зона кнопки = зона контейнера
-                          onPressed: () {},
+                          onPressed: () => Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ItemDetailPage(index: -1);
+                          })),
                           child: Text(
                             "Добавить",
+                            overflow: TextOverflow.visible,
                             style: TextStyle(
+                                height: 0.85,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
@@ -69,9 +75,10 @@ class _ItemPageState extends State<ItemPage> {
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return ItemsList(
+                    index: index,
                     code: libraryItems[index].code,
                     name: libraryItems[index].name,
-                    description: "libraryItems[index].description");
+                    description: libraryItems[index].description);
               },
             )
           ],
