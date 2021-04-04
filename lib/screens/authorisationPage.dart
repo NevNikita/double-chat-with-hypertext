@@ -94,7 +94,7 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                     context, MaterialPageRoute(builder: (_) => RegisterPage()));
               },
               child: Text(
@@ -111,7 +111,8 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
   void enter() {
     setState(() {
       if (loginUser(_loginController.text, _passwordController.text) == "ok")
-        Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => HomePage()));
       else
         _inputError = true;
       if ((_loginController.text == "") || (_passwordController.text == ""))
