@@ -140,7 +140,8 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
 
       /*
       if (loginUser(_loginController.text, _passwordController.text) == "ok")
-        Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => HomePage()));
       else
         _inputError = true;
       if ((_loginController.text == "") || (_passwordController.text == ""))

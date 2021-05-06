@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'itemDetailPage.dart';
 
+VoidCallback update;
+
 class ItemPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ItemPageState();
@@ -12,6 +14,9 @@ class ItemPage extends StatefulWidget {
 class _ItemPageState extends State<ItemPage> {
   @override
   Widget build(BuildContext context) {
+    update = () {
+      setState(() {});
+    };
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -48,10 +53,12 @@ class _ItemPageState extends State<ItemPage> {
                           width: 2,
                         ),
                         TextButton(
-                          onPressed: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return ItemDetailPage(index: -1);
-                          })),
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return ItemDetailPage(index: -1);
+                            }));
+                          },
                           child: Text(
                             "Добавить",
                             overflow: TextOverflow.visible,
