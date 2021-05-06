@@ -3,6 +3,7 @@ import 'package:double_chat_with_hypertext/models/authorisationModel.dart';
 import 'package:double_chat_with_hypertext/screens/authorisationPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 
 TextEditingController _loginController = new TextEditingController();
 TextEditingController _emailController = new TextEditingController();
@@ -21,6 +22,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _auth = FirebaseAuth.instance;
+
   Timer
       searchOnStoppedTypingLogin; //таймер который идёт заново после того как юзер печатает
   _onChangeLoginHandler(value) {
@@ -112,6 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
+                  keyboardType: TextInputType.name,
                   controller: _loginController,
                   onChanged: _onChangeLoginHandler,
                   //onSubmitted: (value) => enter(),
@@ -128,15 +132,16 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.only(
                     left: 15.0, right: 15.0, top: 25, bottom: 0),
                 child: TextField(
+                  keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
                   onChanged: _onChangeEmailHandler,
                   //onSubmitted: (value) => enter(),
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Email',
-                      errorText: _emailValidation
+                      /*errorText: _emailValidation
                           ? null
-                          : emailValidation(_emailController.text),
+                          : emailValidation(_emailController.text),*/
                       hintText: 'Введите email'),
                 ),
               ),
@@ -202,12 +207,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
 //TODO если в полях ничего не писали то кнопка не работает и ошибки не показываются
   enter() {
-    setState(() {
+    setState(() async {
+      if (await registerUser(
+          email: _emailController.text,
+          name: _loginController.text,
+          password: _passwordController.text)) Navigator.pop(context);
+      /*
       if ((_passwordController.text == _passwordConfirmationController.text) &&
           registerUser(
               email: _emailController.text,
               name: _loginController.text,
               password: _passwordController.text)) Navigator.pop(context);
+              */
     });
   }
 }

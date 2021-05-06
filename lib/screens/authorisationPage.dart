@@ -1,5 +1,7 @@
 import 'package:double_chat_with_hypertext/models/authorisationModel.dart';
 import 'package:double_chat_with_hypertext/screens/registerPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'homePage.dart';
@@ -16,6 +18,13 @@ class AuthorisationPage extends StatefulWidget {
 
 class _AuthorisationPageState extends State<AuthorisationPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  final _auth = FirebaseAuth.instance;
+
+  @override
   void dispose() {
     _loginController.dispose();
     _passwordController.dispose();
@@ -31,6 +40,7 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 60.0),
@@ -67,6 +77,9 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
                     hintText: 'Пароль'),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
             TextButton(
               onPressed: () {
                 //TODO Забыл пароль экранчек
@@ -75,6 +88,9 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
                 'Забыл пароль',
                 style: TextStyle(color: Colors.blue, fontSize: 15),
               ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Container(
               height: 50,
@@ -90,16 +106,19 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
               ),
             ),
             SizedBox(
-              height: 300,
+              height: 390,
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => RegisterPage()));
-              },
-              child: Text(
-                'Создать аккаунт',
-                style: TextStyle(color: Colors.blueGrey[400], fontSize: 15),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => RegisterPage()));
+                },
+                child: Text(
+                  'Создать аккаунт',
+                  style: TextStyle(color: Colors.blueGrey[400], fontSize: 15),
+                ),
               ),
             ),
           ],
@@ -109,7 +128,17 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
   }
 
   void enter() {
-    setState(() {
+    setState(() async {
+      try {
+        final user = await _auth.signInWithEmailAndPassword(
+            email: _loginController.text, password: _passwordController.text);
+
+        Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+      } catch (e) {
+        print(e);
+      }
+
+      /*
       if (loginUser(_loginController.text, _passwordController.text) == "ok")
         Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
       else
@@ -117,7 +146,7 @@ class _AuthorisationPageState extends State<AuthorisationPage> {
       if ((_loginController.text == "") || (_passwordController.text == ""))
         _emptyError = true;
       else
-        _emptyError = false;
+        _emptyError = false;*/
     });
   }
 }

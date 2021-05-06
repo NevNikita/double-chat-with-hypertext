@@ -1,4 +1,6 @@
 import "package:flutter/cupertino.dart";
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 bool userAuthorisated = false;
 
@@ -6,6 +8,9 @@ String emailPattern =
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 String passwordPattern =
     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{3,}$';
+
+final _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
 
 class User {
   String name;
@@ -15,23 +20,14 @@ class User {
   User({@required this.email, @required this.name, @required this.password});
 }
 
-List<User> users = [
-  User(email: "flavel@gmail.com", name: "Flavel", password: "1234"),
-  User(email: "flovel@gmail.com", name: "Flovel", password: "12344")
-];
+CollectionReference<Map<String, String>> users = _firestore.collection('users');
 
-String emailValidation(String email) {
-  var contain = users.where((element) => element.email == email);
-  if (contain.isNotEmpty) return "Email уже используется";
-  if (!RegExp(emailPattern).hasMatch(email))
-    return "Неправильный email";
-  else
-    return "ok";
+Future<String> emailValidation(String email) async {
+  var contain =
+      await _firestore.collection('users').where((item) => item.key == email);
 }
 
 bool nameValidation(String name) {
-  var contain = users.where((element) => element.name == name);
-  if (contain.isNotEmpty) return false;
   return true;
 }
 
@@ -40,27 +36,33 @@ bool passwordValidation(String password) {
   return true;
 }
 
-bool registerUser(
+Future<bool> registerUser(
     {@required String email,
     @required String name,
-    @required String password}) {
-  if (passwordValidation(password) &&
-      nameValidation(name) &&
-      (emailValidation(email) == "ok")) {
-    users.add(User(email: email, name: name, password: password));
-    return true;
-  } else
+    @required String password}) async {
+  try {
+    await users.add({'email': email, 'login': name});
+  } catch (e) {
+    print(e);
+  }
+  try {
+    final user = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    if (user != null) {
+      return true;
+    }
+  } catch (e) {
+    print(e);
     return false;
+  }
 }
 
-String loginUser(String login, String password) {
-  if (RegExp(emailPattern).hasMatch(login)) {
-    var contain = users.where(
-        (element) => element.email == login && element.password == password);
-    return contain.isNotEmpty ? "ok" : "Логин или пароль неверный";
+Future<bool> loginUser(String login, String password) async {
+  if (!RegExp(emailPattern).hasMatch(login)) {
+    await _auth.signInWithEmailAndPassword(email: login, password: password);
+    return true;
   } else {
-    var contain = users.where(
-        (element) => element.name == login && element.password == password);
-    return contain.isNotEmpty ? "ok" : "Логин или пароль неверный";
+    var user = users.where((field) => field.key == login);
+    return false;
   }
 }
