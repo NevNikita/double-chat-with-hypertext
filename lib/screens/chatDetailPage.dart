@@ -1,5 +1,6 @@
 import 'package:double_chat_with_hypertext/models/chatMessageModel.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatDetailPage extends StatefulWidget {
   @override
@@ -124,7 +125,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               alignment: Alignment.bottomLeft,
               child: Container(
                 padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                height: 60,
+                //height: 60,
                 width: double.infinity,
                 color: Colors.white,
                 child: Row(
@@ -150,6 +151,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     ),
                     Expanded(
                       child: TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 3,
+                        minLines: 1,
                         controller: _textFieldController,
                         focusNode: myFocusNode,
                         autofocus: true,

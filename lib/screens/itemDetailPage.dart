@@ -153,14 +153,22 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
       libraryItems[index].code = _codeController.text;
       libraryItems[index].name = _nameController.text;
       libraryItems[index].description = _descriptionController.text;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ItemPage(),
-        ),
-      );
+      setState(() {
+        libraryItems = libraryItems;
+        update();
+        Navigator.pop(context);
+      });
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => ItemPage(),
+      //   ),
+      // );
     }
+
     setState(() {
+      libraryItems;
+
       _codeValidation = false;
     });
   }

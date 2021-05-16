@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "994775759384",
+    "project_id": "double-chat",
+    "storage_bucket": "double-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:994775759384:android:fb634c11a8af7e70d0e16d",
+        "android_client_info": {
+          "package_name": "com.besdushka.double_chat_with_hypertext"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "994775759384-vbc93enhoqtv04ilc5m6pbonulfriorq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMn46zEtXzaooTtxqieGBgL9ou5x-Nz6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "994775759384-vbc93enhoqtv04ilc5m6pbonulfriorq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
