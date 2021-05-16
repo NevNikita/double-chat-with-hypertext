@@ -1,4 +1,5 @@
 import 'package:double_chat_with_hypertext/models/chatMessageModel.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
