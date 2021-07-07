@@ -3,7 +3,9 @@ import 'package:double_chat_with_hypertext/screens/registerPage.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
-  LoginForm(this.submitForm);
+  LoginForm(this.submitForm, this.isLoading);
+
+  final isLoading;
 
   final void Function(String login, String password, BuildContext ctx)
       submitForm;
@@ -63,7 +65,7 @@ class _LoginFormState extends State<LoginForm> {
               child: TextFormField(
                 onSaved: (value) => _password = value,
                 validator: (value) {
-                  if (RegExp(passwordPattern).hasMatch(value)) {
+                  if (!RegExp(passwordPattern).hasMatch(value)) {
                     return null;
                   } else
                     return 'Введите корректный пароль.';
@@ -111,7 +113,7 @@ class _LoginFormState extends State<LoginForm> {
         child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           TextButton(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context, MaterialPageRoute(builder: (_) => RegisterPage()));
             },
             child: Text(

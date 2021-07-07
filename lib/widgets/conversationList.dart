@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:double_chat_with_hypertext/screens/chatDetailPage.dart';
 import 'package:flutter/material.dart';
 
@@ -5,12 +6,14 @@ import 'package:flutter/material.dart';
 class ConversationList extends StatefulWidget {
   String name;
   String messageText;
+  String chatId;
   String imageUrl;
-  String time;
+  Timestamp time;
   bool isMessageRead;
   ConversationList(
       {@required this.name,
       @required this.messageText,
+      @required this.chatId,
       @required this.imageUrl,
       @required this.time,
       @required this.isMessageRead});
@@ -21,10 +24,20 @@ class ConversationList extends StatefulWidget {
 class _ConversationListState extends State<ConversationList> {
   @override
   Widget build(BuildContext context) {
+    String dateConvert(Timestamp ts) {
+      var time = ts.toDate().toLocal();
+      if (time.month == DateTime.now().month &&
+          time.day == DateTime.now().day) {
+        print(DateTime.now().month);
+        return '${time.hour}:${time.minute}';
+      } else
+        return '${time.day}.${time.month}.${time.year}';
+    }
+
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ChatDetailPage();
+          return ChatDetailPage(widget.chatId, widget.name);
         }));
       },
       child: Container(
@@ -71,9 +84,9 @@ class _ConversationListState extends State<ConversationList> {
               ),
             ),
             Text(
-              widget.time,
+              dateConvert(widget.time),
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: widget.isMessageRead
                       ? FontWeight.bold
                       : FontWeight.normal),

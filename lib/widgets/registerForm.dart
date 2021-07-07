@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class RegisterForm extends StatefulWidget {
   @override
   _RegisterFormState createState() => _RegisterFormState();
-
-  RegisterForm(this.submitForm);
+  bool isLoading = false;
+  RegisterForm(this.submitForm, this.isLoading);
 
   final void Function(
           String email, String login, String password, BuildContext context)
@@ -23,9 +23,12 @@ class _RegisterFormState extends State<RegisterForm> {
   String _password = '';
 
   void _trySubmit() {
+    print('here');
     FocusScope.of(context).unfocus();
     var isValid = _formKey.currentState.validate();
+    print('validating');
     if (isValid) {
+      print('validated');
       _formKey.currentState.save();
       widget.submitForm(_email, _login, _password, context);
     }
@@ -37,7 +40,12 @@ class _RegisterFormState extends State<RegisterForm> {
       child: Form(
         key: _formKey,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            SizedBox(
+              height: 30,
+            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
@@ -53,8 +61,11 @@ class _RegisterFormState extends State<RegisterForm> {
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Логин',
-                    hintText: 'Введите ваш email или логин'),
+                    hintText: 'Введите ваш логин'),
               ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -75,6 +86,9 @@ class _RegisterFormState extends State<RegisterForm> {
                     hintText: 'Введите email'),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Padding(
               padding: const EdgeInsets.only(
                   left: 15.0, right: 15.0, top: 25, bottom: 0),
@@ -83,7 +97,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 controller: _passwordController,
                 onSaved: (value) => _password = value,
                 validator: (value) {
-                  if (!RegExp(passwordPattern).hasMatch(value)) {
+                  if (!RegExp(easyPasswordPatter).hasMatch(value)) {
                     return null;
                   } else
                     return 'Введите корректный password.';
@@ -95,6 +109,9 @@ class _RegisterFormState extends State<RegisterForm> {
                     labelText: 'Пароль',
                     hintText: 'Пароль'),
               ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Padding(
                 padding: const EdgeInsets.only(
@@ -117,6 +134,9 @@ class _RegisterFormState extends State<RegisterForm> {
                     labelText: 'Повторите пароль',
                   ),
                 )),
+            SizedBox(
+              height: 30,
+            ),
             Container(
               height: 50,
               width: 400,

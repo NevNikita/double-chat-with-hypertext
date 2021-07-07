@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:double_chat_with_hypertext/models/chatMessageModel.dart';
 import 'package:double_chat_with_hypertext/models/chatUserModel.dart';
 import 'package:double_chat_with_hypertext/widgets/conversationList.dart';
 import 'package:flutter/material.dart';
@@ -77,21 +79,33 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
             ),
-            ListView.builder(
-              itemCount: chatUsers.length,
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: 16),
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return ConversationList(
-                  name: chatUsers[index].name,
-                  messageText: chatUsers[index].messageText,
-                  imageUrl: chatUsers[index].imageURL,
-                  time: chatUsers[index].time,
-                  isMessageRead: (index == 0 || index == 3) ? true : false,
-                );
-              },
-            ),
+            StreamBuilder(
+                stream:
+                    FirebaseFirestore.instance.collection('chats').snapshots(),
+                builder: (ctx, chatSnapshot) {
+                  if (chatSnapshot.connectionState == ConnectionState.waiting)
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  final docs = chatSnapshot.data.docs;
+                  return ListView.builder(
+                    itemCount: docs.length,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(top: 16),
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return ConversationList(
+                        name: docs[index]['name'],
+                        messageText: docs[index]['lastMessage'],
+                        chatId: docs[index].id,
+                        imageUrl: chatUsers[index].imageURL,
+                        time: docs[index]['lastMessageTime'],
+                        isMessageRead:
+                            (index == 0 || index == 3) ? true : false,
+                      );
+                    },
+                  );
+                })
           ],
         ),
       ),

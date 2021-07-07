@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -17,7 +18,30 @@ class _ProfilePageState extends State<ProfilePage> {
             SafeArea(
                 child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              child: Row(),
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          FirebaseAuth.instance.signOut();
+                        });
+
+                        print(FirebaseAuth.instance.currentUser);
+                      },
+                      child: Text(
+                        'Выйти из профиля',
+                        style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ))
           ],
         ),
